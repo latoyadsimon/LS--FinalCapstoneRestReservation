@@ -60,6 +60,8 @@ async function fetchJson(url, options, onCancel) {
 
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
+
+  //appending the date parameter to the get request
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
@@ -68,15 +70,35 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
-
 //notes from 37.5 StarterCode, added 10/18/22
 export async function createReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: reservation}),
+    body: JSON.stringify({ data: reservation }),
     signal,
   };
   return await fetchJson(url, options);
 }
+
+// //module 39 we love movies frontend api.js
+// export async function readReservation(reservationId, signal) {
+//   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
+//   return await fetchJson(url, { headers, signal }, []);
+// }
+
+// export async function deleteReservation(reservationId) {
+//   const url = `${API_BASE_URL}/reservations/${reservationId}`;
+//   return await fetchJson(url, { method: "DELETE", headers }, {});
+// }
+
+// export async function updateReservation(reservationId, data) {
+//   const url = `${API_BASE_URL}/reservations/${reservationId}`;
+//   const options = {
+//     method: "PUT",
+//     headers,
+//     body: JSON.stringify({ data }),
+//   };
+//   return await fetchJson(url, options, {});
+// }
