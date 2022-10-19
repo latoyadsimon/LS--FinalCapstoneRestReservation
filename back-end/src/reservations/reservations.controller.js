@@ -1,3 +1,6 @@
+const path = require("path");
+const reservationsService = "./reservations.service";
+
 /**
  * List handler for reservation resources
  */
