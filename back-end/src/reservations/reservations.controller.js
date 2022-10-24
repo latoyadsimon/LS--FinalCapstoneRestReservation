@@ -37,17 +37,17 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-function hasEnoughPeople(req, res, next) {
-  const peopleInParty = Number(req.body.data.people);
+// function hasEnoughPeople(req, res, next) {
+//   const peopleInParty = Number(req.body.data.people);
 
-  if (peopleInParty >= 1) {
-    return next();
-  }
-  next({
-    status: 400,
-    message: `Must have at least 1 person in the party to make a reservation.`,
-  });
-}
+//   if (peopleInParty >= 1) {
+//     return next();
+//   }
+//   next({
+//     status: 400,
+//     message: `Must have at least 1 person in the party to make a reservation.`,
+//   });
+// }
 
 function hasValidFields(req, res, next) {
   const { data = {} } = req.body;
@@ -78,7 +78,7 @@ function hasValidFields(req, res, next) {
 
 function hasReservationId(req, res, next) {
   const reservation =
-    req.params.reservation_id || req.body?.data?.reservation_id;
+    req.params.reservation_id || req.body?.data?.reservation_id; // if there is a req.body, check for data, if there is data, check for reservation_id.
 
   if (reservation) {
     res.locals.reservation_id = reservation;
@@ -94,8 +94,10 @@ function hasReservationId(req, res, next) {
 /**
  * Check "isValidNumber" handler for reservation resources
  */
+//this function is not working on the ui
 function isValidNumber(req, res, next) {
   const { data = {} } = req.body;
+  console.log("this should be the number of people:", data["people"]);
   if (data["people"] === 0 || !Number.isInteger(data["people"])) {
     return next({ status: 400, message: `Invalid number of people` });
   }
@@ -108,14 +110,15 @@ function isValidNumber(req, res, next) {
 function isValidDate(req, res, next) {
   const { data = {} } = req.body;
   const reservation_date = new Date(data["reservation_date"]);
-  const day = reservation_date.getUTCDay();
-
+  const day = reservation_date.getUTCDay(); //check this on mdn
+  console.log("this is the reservation date:", reservation_date);
   if (isNaN(Date.parse(data["reservation_date"]))) {
     return next({ status: 400, message: `Invalid reservation_date` });
   }
   if (day === 2) {
     return next({ status: 400, message: `Restaurant is closed on Tuesdays` });
   }
+  //changed from less than to greater than
   if (reservation_date < new Date()) {
     return next({
       status: 400,
@@ -125,9 +128,10 @@ function isValidDate(req, res, next) {
   next();
 }
 
-/**
+/**postgres://coglhrks:XFVgQhaoqD-jnZ6j-CcF8i9B4hgzRMJy@peanut.db.elephantsql.com/coglhrks
  * Check "isTime" handler for reservation resources
  */
+//this is using regexp; new to research regexp **Ask Teddy later
 function isTime(req, res, next) {
   const { data = {} } = req.body;
   // TODO: Change this...
@@ -239,5 +243,5 @@ module.exports = {
     asyncErrorBoundary(update),
   ],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
-  list: [asyncErrorBoundary(list)],
+  list: asyncErrorBoundary(list),
 };
