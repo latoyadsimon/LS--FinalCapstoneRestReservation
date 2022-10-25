@@ -17,9 +17,9 @@ router
 router
   .route("/:reservation_id")
   .get(controller.read)
-  .put(controller.update)
+  .patch(controller.update)
   .delete(controller.delete)
   .all(methodNotAllowed);
 
 module.exports = router;
-//*
+//difference between update router, put changes all of the data, patch changes some of the data

@@ -94,7 +94,6 @@ function hasReservationId(req, res, next) {
 /**
  * Check "isValidNumber" handler for reservation resources
  */
-//this function is not working on the ui
 function isValidNumber(req, res, next) {
   const { data = {} } = req.body;
   console.log("this should be the number of people:", data["people"]);
@@ -110,15 +109,18 @@ function isValidNumber(req, res, next) {
 function isValidDate(req, res, next) {
   const { data = {} } = req.body;
   const reservation_date = new Date(data["reservation_date"]);
-  const day = reservation_date.getUTCDay(); //check this on mdn
+  const day = reservation_date.getUTCDay(); //check this on mdn-- this is finding the number for the day of the week,
+  //according to universal time: 0 for Sunday, 1 for Monday, 2 for Tuesday, and so on.
   console.log("this is the reservation date:", reservation_date);
+
   if (isNaN(Date.parse(data["reservation_date"]))) {
     return next({ status: 400, message: `Invalid reservation_date` });
   }
   if (day === 2) {
     return next({ status: 400, message: `Restaurant is closed on Tuesdays` });
   }
-  //changed from less than to greater than
+
+  //check to see if same day reservations can be made*****
   if (reservation_date < new Date()) {
     return next({
       status: 400,
@@ -128,13 +130,14 @@ function isValidDate(req, res, next) {
   next();
 }
 
-/**postgres://coglhrks:XFVgQhaoqD-jnZ6j-CcF8i9B4hgzRMJy@peanut.db.elephantsql.com/coglhrks
+/**
  * Check "isTime" handler for reservation resources
  */
-//this is using regexp; new to research regexp **Ask Teddy later
+//this is using regexp; regular expressions, patterns
 function isTime(req, res, next) {
   const { data = {} } = req.body;
   // TODO: Change this...
+  //HH:MM 24-hour with leading 0 || don't know what this one is yet***
   if (
     /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(data["reservation_time"]) ||
     /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/.test(
