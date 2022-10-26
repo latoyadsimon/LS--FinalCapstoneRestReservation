@@ -103,6 +103,9 @@ function FormReservation() {
             value={reservation.reservation_time}
             onChange={changeHandler}
           />
+          <small className="col-sm-2">
+            Reservation hours are between 10:30am and 9:30pm{" "}
+          </small>
         </div>
       </div>
       <div className="form-group row">
