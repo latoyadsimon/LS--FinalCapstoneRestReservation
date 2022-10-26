@@ -14,26 +14,24 @@ function Reservations({ onCancel, reservations = [] }) {
       onCancel(reservationIdCancel);
     }
   }
+
   const rows = reservations.length ? (
     reservations.map((reservation) => {
       return (
         <div className="form-group row" key={reservation.reservation_id}>
           <div className="col-sm-1">{reservation.reservation_id}</div>
-          <div className="col-sm-1">
+          <div>
             {reservation.first_name}, {reservation.last_name}
           </div>
-          <div className="col-sm-1">{reservation.mobile_number}</div>
-          <div className="col-sm-1">{reservation.reservation_date}</div>
-          <div className="col-sm-1">{reservation.reservation_time}</div>
-          <div className="col-sm-1">{reservation.people}</div>
-          <div
-            className="col-sm-1"
-            data-reservation-id-status={reservation.reservation_id}
-          >
+          <div>{reservation.mobile_number}</div>
+          <div>{reservation.reservation_time}</div>
+          <div>{reservation.reservation_date}</div>
+          <div>{reservation.people}</div>
+          <div data-reservation-id-status={reservation.reservation_id}>
             {reservation.status}
           </div>
           {reservation.status === "booked" ? (
-            <div className="col-sm-1">
+            <div>
               <Link
                 className="btn"
                 to={`/reservations/${reservation.reservation_id}/seat`}
@@ -70,6 +68,7 @@ function Reservations({ onCancel, reservations = [] }) {
   ) : (
     <div>No reservations found</div>
   );
+
   return <div className="table">{rows}</div>;
 }
 

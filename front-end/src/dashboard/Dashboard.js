@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { listReservations, cancelReservation, finishTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 //import DashboardDetails from "./DashboardDetails";
 import Reservations from "./Reservations";
+import { today, next, previous } from "../utils/date-time";
 
 /**
  * Defines the dashboard page.
@@ -34,22 +36,23 @@ function Dashboard({ date }) {
       .catch(setReservationsError);
   }
 
-  function onFinish(table_id, reservation_id) {
-    finishTable(table_id, reservation_id).then(loadDashboard);
-  }
+  // function onFinish(table_id, reservation_id) {
+  //   finishTable(table_id, reservation_id).then(loadDashboard);
+  // }
 
   console.log("reservations on dashboard: ", reservations);
   return (
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        {/* <h4 className="mb-0">Reservations for {date}</h4> */}
-        <h4 className="mb-0">Reservations for {reservations}</h4>
+        <h4 className="mb-0">Reservations for {date}</h4>
       </div>
       <ErrorAlert error={reservationsError} />
       <Reservations reservations={reservations} onCancel={onCancel} />
-      {/* {JSON.stringify(reservations)}
-      <DashboardDetails /> */}
+
+      <Link to={`/dashboard?date=${previous(date)}`}>Previous</Link>
+      <Link to={`/dashboard?date=${today(date)}`}>Today</Link>
+      <Link to={`/dashboard?date=${next(date)}`}>Next</Link>
     </main>
   );
 }
