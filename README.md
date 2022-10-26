@@ -152,6 +152,8 @@ The Product Manager has already created the user stories for _Periodic Tables_. 
 
 Although the user stories do not say anything about deployment, you should consider deploying early and often. You may even decide to deploy before adding any features. We recommend that you use [Heroku](https://devcenter.heroku.com/articles/deploying-nodejs) to deploy this project.
 
+<!-- we are using render.com, added 10/18/2022 -->
+
 ### US-01 Create and list reservations
 
 As a restaurant manager<br/>
