@@ -1,3 +1,5 @@
+//notes with help from Teddy
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -30,11 +32,38 @@ function Reservations({ onCancel, reservations = [] }) {
           <div data-reservation-id-status={reservation.reservation_id}>
             {reservation.status}
           </div>
-          <Link to={`/reservations/${reservation.reservation_id}/seat`}>
-            <button type="button" className="btn btn-primary">
-              Seat
-            </button>
-          </Link>
+          {reservation.status === "booked" ? (
+            <div>
+              <Link
+                className="btn"
+                to={`/reservations/${reservation.reservation_id}/seat`}
+              >
+                seat
+              </Link>
+              <Link
+                className="btn"
+                to={`/reservations/${reservation.reservation_id}/edit`}
+              >
+                edit
+              </Link>
+              <Link
+                className="btn"
+                to={`/reservations/${reservation.reservation_id}/cancel`}
+              >
+                cancel
+              </Link>
+              <button
+                type="button"
+                className="btn cancel"
+                data-reservation-id-cancel={reservation.reservation_id}
+                onClick={cancelHandler}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       );
     })

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { listReservations, cancelReservation, finishTable } from "../utils/api";
+import {
+  listReservations,
+  cancelReservation,
+  finishTable,
+  listTables,
+} from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 //import DashboardDetails from "./DashboardDetails";
 import Reservations from "./Reservations";
 import { today, next, previous } from "../utils/date-time";
+import Tables from "./Tables";
 
 /**
  * Defines the dashboard page.
@@ -19,6 +25,9 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+
   useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
@@ -27,6 +36,8 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -36,11 +47,12 @@ function Dashboard({ date }) {
       .catch(setReservationsError);
   }
 
-  // function onFinish(table_id, reservation_id) {
-  //   finishTable(table_id, reservation_id).then(loadDashboard);
-  // }
+  function onFinish(table_id, reservation_id) {
+    finishTable(table_id, reservation_id).then(loadDashboard);
+  }
 
   console.log("reservations on dashboard: ", reservations);
+  console.log("tables on dashboard:", tables);
   return (
     <main>
       <h1>Dashboard</h1>
@@ -49,6 +61,11 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       <Reservations reservations={reservations} onCancel={onCancel} />
+
+      <div className="d-md-flex mb-3">
+        <h4 className="mb-0">Tables</h4>
+      </div>
+      <Tables tables={tables} />
 
       <Link to={`/dashboard?date=${previous(date)}`}>Previous</Link>
       <Link to={`/dashboard?date=${today(date)}`}>Today</Link>
