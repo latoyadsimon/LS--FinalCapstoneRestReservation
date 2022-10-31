@@ -59,7 +59,7 @@ function Dashboard({ date }) {
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={reservationsError} tablesError={tablesError} />
       <Reservations reservations={reservations} onCancel={onCancel} />
 
       <div className="d-md-flex mb-3">

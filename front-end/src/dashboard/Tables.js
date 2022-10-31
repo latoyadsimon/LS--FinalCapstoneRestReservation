@@ -9,6 +9,7 @@ function Tables({ tables = [] }) {
           <div className="col-sm-1">{table.table_id}</div>
           <div>{table.table_name}</div>
           <div>{table.capacity}</div>
+          <div data-table-id-status={table.table_id}>{table.status}</div>
         </div>
       );
     })

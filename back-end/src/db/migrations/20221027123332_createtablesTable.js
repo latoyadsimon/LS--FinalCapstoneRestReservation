@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.string("table_name").notNullable();
     table.integer("capacity").notNullable();
     table.integer("reservation_id").unsigned();
+    table.boolean("reservation_status");
     table
       .foreign("reservation_id")
       .references("reservation_id")
@@ -13,6 +14,7 @@ exports.up = function (knex) {
   });
 };
 //we need to add a column for reservation id
+//added a column for the reservation status
 exports.down = function (knex) {
   return knex.schema.dropTable("tables");
 };

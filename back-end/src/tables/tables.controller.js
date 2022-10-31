@@ -58,6 +58,15 @@ function isOneCharacter(req, res, next) {
   next();
 }
 
+// function isOccupied(req, res, next) {
+//     if(table.reservation_id !== null) {
+//        return (`Reservation ${reservation_id} is currently seated here. This table is occupied.`)
+//     }else{
+//         return
+
+//     }
+// }
+
 /**
  * Create handler for tables resources
  */
