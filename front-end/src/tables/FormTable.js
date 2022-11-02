@@ -1,7 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+
+//utils
 import { createTable } from "../utils/api";
+
+//errors
 import ErrorAlert from "../layout/ErrorAlert";
 
 function FormTable() {
@@ -38,10 +42,6 @@ function FormTable() {
         history.push("/");
       })
       .catch(setError);
-  }
-
-  function cancelHandler() {
-    history.push("/");
   }
 
   return (
@@ -92,7 +92,7 @@ function FormTable() {
           <button
             type="button"
             className="btn btn-secondary mr-2"
-            onClick={cancelHandler}
+            onClick={history.goBack}
           >
             Cancel
           </button>

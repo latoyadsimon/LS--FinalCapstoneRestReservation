@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  listReservations,
-  cancelReservation,
-  finishTable,
-  listTables,
-} from "../utils/api";
+import { useHistory } from "react-router-dom";
+
+//utils
+import { listReservations, listTables } from "../utils/api";
+import { next, previous } from "../utils/date-time";
+import useQuery from "../utils/useQuery";
+//Layout
 import ErrorAlert from "../layout/ErrorAlert";
-//import DashboardDetails from "./DashboardDetails";
 import Reservations from "./Reservations";
-import { today, next, previous } from "../utils/date-time";
 import Tables from "./Tables";
 
 /**
@@ -19,9 +17,16 @@ import Tables from "./Tables";
  * @returns {JSX.Element}
  */
 
-//make a useEffect, inside make an api call(a fetch) to /reservations api, including the date variable in the query string as a template literal, console.log it out, use string methods to format it
+// determine the date from the parameters if provided
 
 function Dashboard({ date }) {
+  const query = useQuery();
+  const dateQuery = query.get("date");
+  // getting the current day in YYYY-MM-DD format
+  const today = new Date().toJSON().slice(0, 10);
+
+  const [dashDate, setDashDate] = useState(dateQuery ? dateQuery : today);
+  const history = useHistory();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
@@ -41,35 +46,97 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  function onCancel(reservation_id) {
-    cancelReservation(reservation_id)
-      .then(loadDashboard)
-      .catch(setReservationsError);
-  }
+  const tableList = tables.map((table) => (
+    <Tables loadDashboard={loadDashboard} key={table.table_id} table={table} />
+  ));
 
-  function onFinish(table_id, reservation_id) {
-    finishTable(table_id, reservation_id).then(loadDashboard);
-  }
+  const reservationList = reservations.map((reservation) => (
+    <Reservations
+      loadDashboard={loadDashboard}
+      key={reservation.reservation_id}
+      reservation={reservation}
+    />
+  ));
 
-  console.log("reservations on dashboard: ", reservations);
-  console.log("tables on dashboard:", tables);
+  const handlePrevious = (event) => {
+    event.preventDefault();
+    history.push(`/dashboard?date=${previous(dashDate)}`);
+    setDashDate(previous(dashDate));
+  };
+
+  const handleNext = (event) => {
+    event.preventDefault();
+    history.push(`/dashboard?date=${next(dashDate)}`);
+    setDashDate(next(dashDate));
+  };
+
+  const handleToday = (event) => {
+    event.preventDefault();
+    setDashDate(today);
+    history.push(`/dashboard?date=${today}`);
+  };
+
   return (
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      <ErrorAlert error={reservationsError} tablesError={tablesError} />
-      <Reservations reservations={reservations} onCancel={onCancel} />
+      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">NAME</th>
+            <th scope="col">PHONE</th>
+            <th scope="col">DATE</th>
+            <th scope="col">TIME</th>
+            <th scope="col">PEOPLE</th>
+            <th scope="col">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>{reservationList}</tbody>
+      </table>
 
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Tables</h4>
       </div>
-      <Tables tables={tables} />
 
-      <Link to={`/dashboard?date=${previous(date)}`}>Previous</Link>
-      <Link to={`/dashboard?date=${today(date)}`}>Today</Link>
-      <Link to={`/dashboard?date=${next(date)}`}>Next</Link>
+      <main>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Table Name</th>
+              <th scope="col">Capacity</th>
+              <th scope="col">Is Occupied?</th>
+              <th scope="col">Finished</th>
+            </tr>
+          </thead>
+          <tbody>{tableList}</tbody>
+        </table>
+      </main>
+
+      <div className="row">
+        <div className="btn-group col" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            className="btn btn-info"
+            onClick={handlePrevious}
+          >
+            <span className="oi oi-chevron-left"></span>
+            &nbsp;Previous
+          </button>
+          <button type="button" className="btn btn-info" onClick={handleToday}>
+            Today
+          </button>
+          <button type="button" className="btn btn-info" onClick={handleNext}>
+            Next&nbsp;
+            <span className="oi oi-chevron-right"></span>
+          </button>
+        </div>
+      </div>
     </main>
   );
 }

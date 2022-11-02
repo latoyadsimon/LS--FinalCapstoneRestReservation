@@ -13,12 +13,6 @@ function read(reservation_id) {
   return knex("reservations").select("*").where({ reservation_id }).first();
 }
 
-// function reservationIsToday() {
-//   return knex("reservations")
-//     .select("*")
-//     .where({ "reservations.reservation_date": today });
-// }
-
 function create(newReservation) {
   return knex("reservations")
     .insert(newReservation, "*")
@@ -39,7 +33,7 @@ function destroy(reservation_Id) {
 module.exports = {
   list,
   read,
-  // reservationIsToday,
+
   create,
   update,
   delete: destroy,

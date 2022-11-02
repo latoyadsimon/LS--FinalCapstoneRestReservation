@@ -6,16 +6,18 @@ import ErrorAlert from "../layout/ErrorAlert";
 
 function FormReservation() {
   const history = useHistory();
+
   const initialState = {
     first_name: "",
     last_name: "",
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: 0,
+    people: 1,
   };
 
   const [reservation, setReservation] = useState(initialState);
+
   function changeHandler({ target: { name, value } }) {
     setReservation((prevState) => ({
       ...prevState,
@@ -32,9 +34,6 @@ function FormReservation() {
   }
 
   const [error, setError] = useState(null);
-  // function cancelHandler() {
-  //     history.push("/");
-  // }
 
   function submitHandler(event) {
     event.preventDefault();
@@ -121,7 +120,7 @@ function FormReservation() {
         </div>
       </div>
       <button type="submit">Submit</button>
-      <button type="button" onClick={() => history.goBack()}>
+      <button type="button" onClick={history.goBack}>
         Cancel
       </button>
     </form>
