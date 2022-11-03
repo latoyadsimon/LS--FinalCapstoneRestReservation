@@ -1,9 +1,21 @@
 import React from "react";
+import { finishTable } from "../utils/api";
 
 //tables prop is coming from the dashboard component
 function Tables({ table, loadDashboard }) {
   const { table_id, table_name, capacity, reservation_id } = table;
 
+  const handleFinish = () => {
+    const confirmBox = window.confirm(
+      "Is this table ready to seat new guests? This cannot be undone."
+    );
+    if (confirmBox === true) {
+      finishTable(table_id)
+        .then(loadDashboard)
+        .catch((error) => console.log("error", error));
+    }
+    return null;
+  };
   return (
     <tr key={table_id}>
       <th scope="row">{table_id}</th>
@@ -15,7 +27,11 @@ function Tables({ table, loadDashboard }) {
       </td>
       <td>
         {reservation_id ? (
-          <button data-table-id-finish={table_id} className="btn btn-warning">
+          <button
+            data-table-id-finish={table_id}
+            className="delete button btn btn-warning"
+            onClick={handleFinish}
+          >
             Finish
           </button>
         ) : null}{" "}

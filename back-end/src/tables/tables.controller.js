@@ -38,7 +38,7 @@ async function reservationIdExists(req, res, next) {
 
 const hasRequiredProperties = hasProperties("table_name", "capacity");
 
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
 function hasValidFields(req, res, next) {
   const { data = {} } = req.body;
@@ -80,6 +80,12 @@ function isOneCharacter(req, res, next) {
 function tableOccupied(req, res, next) {
   const { people } = res.locals.reservation;
   const { reservation_id, capacity } = res.locals.table;
+  console.log(
+    "this is from the tableOccupied function",
+    people,
+    reservation_id,
+    capacity
+  );
 
   if (reservation_id != null) {
     return next({
@@ -126,12 +132,28 @@ async function read(req, res) {
 //   res.json({ data });
 // }
 
+//make a middleware function that checks the table for a reservation id.
+function finishTableOccupied(req, res, next) {
+  const { reservation_id } = res.locals.table;
+
+  if (reservation_id === null) {
+    return next({
+      status: 400,
+      message: "table is not occupied",
+    });
+  }
+  next();
+}
+
 async function finishTable(req, res, next) {
   const { table_id } = req.params;
   // const updatedReservation = { ...req.body.data };
-  const { reservation_id } = req.body.data;
+  // const { reservation_id } = res.locals.table;
+  console.log("this is from the finishTable in controller", table_id);
+  // console.log("this is from the finishTable in controller", reservation_id);
 
-  const data = tablesService.finishTable(reservation_id, table_id);
+  const data = await tablesService.finishTable(table_id);
+  console.log("this is from the finishTable in controller", data);
   res.status(200).json({ data });
 }
 
@@ -155,6 +177,7 @@ module.exports = {
 
   finishTable: [
     asyncErrorBoundary(tablesExists),
+    finishTableOccupied,
     asyncErrorBoundary(finishTable),
   ],
   seatTable: [
