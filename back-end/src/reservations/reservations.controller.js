@@ -1,5 +1,4 @@
 const reservationsService = require("./reservations.service");
-//const { today } = require("../../../front-end/src/utils/date-time");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 
@@ -213,6 +212,8 @@ async function update(req, res, next) {
   res.status(200).json({ data });
 }
 
+//search controller
+
 /**
  * Delete handler for reservation resources
  */
@@ -227,10 +228,11 @@ async function destroy(req, res) {
  * List handler (basic) for reservation resources
  */
 async function list(req, res) {
-  const data = await reservationsService.list(req.query.date);
-  res.json({
-    data,
-  });
+  const { date, mobile_number } = req.query;
+  const reservation = await (mobile_number
+    ? reservationsService.search(mobile_number)
+    : reservationsService.list(date));
+  res.json({ data: reservation });
 }
 
 module.exports = {
@@ -248,14 +250,7 @@ module.exports = {
   update: [
     reservationExists,
     hasValidFields,
-    // hasRequiredProperties,
-    //isValidNumber,
-    // isValidDate,
-    //isTime,
-    //checkStatus,
-
     hasValidStatus,
-    // youAlreadyAte,
     asyncErrorBoundary(update),
   ],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],

@@ -28,6 +28,17 @@ function update(updatedReservation) {
     .then((updatedRecord) => updatedRecord[0]);
 }
 
+//given in project readme
+// remove any non-numeric characters from the submitted mobile number and also use the PostgreSQL translate function.
+function search(mobile_number) {
+  return knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
+}
+
 function destroy(reservation_Id) {
   return knex("reservations").where({ reservation_Id }).del();
 }
@@ -35,8 +46,8 @@ function destroy(reservation_Id) {
 module.exports = {
   list,
   read,
-
   create,
   update,
+  search,
   delete: destroy,
 };
