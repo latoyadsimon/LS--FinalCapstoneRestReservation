@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router";
 //errors
 import ErrorAlert from "../layout/ErrorAlert";
 //utils
-import { listTables, readReservation, seatTable } from "../utils/api";
+import { listTables, seatTable } from "../utils/api";
 
 function SeatTable() {
   const history = useHistory();
@@ -16,18 +16,10 @@ function SeatTable() {
 
   const [tables, setTables] = useState([]);
 
-  const [reservation, setReservation] = useState([]);
-  const [reservationIdError, setReservationIdError] = useState(null);
-
   useEffect(loadTables, [resId]);
 
   function loadTables() {
     const abortController = new AbortController();
-    setReservationIdError(null);
-
-    readReservation(resId, abortController.signal)
-      .then(setReservation)
-      .catch(setReservationIdError);
 
     setUpdateTableError(null);
     listTables(abortController.signal)
@@ -68,9 +60,7 @@ function SeatTable() {
   return (
     <div>
       <div>Seat Reservation at a table</div>
-      <ErrorAlert error={reservationIdError} />
       <ErrorAlert error={updateTableError} />
-      {/* {reservation} */}
       <form onSubmit={submitHandler}>
         <div className="form-row align-items-center">
           <div className="col-auto my-1">
