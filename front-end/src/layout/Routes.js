@@ -23,6 +23,7 @@ import ReservationStatus from "../reservations/ReservationStatus";
 function Routes() {
   const query = useQuery();
   const date = query.get("date");
+  const phoneNumber = query.get("mobile_number");
 
   return (
     <Switch>
@@ -54,7 +55,7 @@ function Routes() {
       </Route>
 
       <Route exact={true} path="/search">
-        <Search />
+        <Search phoneNumber={phoneNumber} />
       </Route>
 
       <Route>
