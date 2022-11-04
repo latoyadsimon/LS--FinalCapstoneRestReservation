@@ -21,10 +21,13 @@ function create(newTable) {
 //     .then((updatedRecord) => updatedRecord[0]);
 // }
 
-function finishTable(reservation_id, table_id) {
+//removing reservation_id from params
+function finishTable(table_id) {
+  console.log("this is from the finishTable service", table_id);
   return knex("tables")
     .where({ table_id: table_id })
-    .update({ reservation_id: null });
+    .update({ reservation_id: null })
+    .returning("*");
 }
 function seatTable(reservation_id, table_id) {
   return knex("tables")

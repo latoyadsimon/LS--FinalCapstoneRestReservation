@@ -49,19 +49,21 @@ const hasRequiredProperties = hasProperties(
 //   });
 // }
 
+//added status
+const validFields = [
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
+  "people",
+];
+
 function hasValidFields(req, res, next) {
   const { data = {} } = req.body;
-  const validFields = new Set([
-    "first_name",
-    "last_name",
-    "mobile_number",
-    "reservation_date",
-    "reservation_time",
-    "people",
-  ]);
 
   const invalidFields = Object.keys(data).filter(
-    (field) => !validFields.has(field)
+    (field) => !validFields.includes(field)
   );
 
   if (invalidFields.length)

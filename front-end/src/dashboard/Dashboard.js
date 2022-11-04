@@ -26,7 +26,9 @@ function Dashboard({ date }) {
   const today = new Date().toJSON().slice(0, 10);
 
   const [dashDate, setDashDate] = useState(dateQuery ? dateQuery : today);
+
   const history = useHistory();
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
