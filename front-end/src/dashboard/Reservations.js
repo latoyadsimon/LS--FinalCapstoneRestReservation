@@ -26,13 +26,15 @@ function Reservations({ reservation, loadDashboard }) {
           {status}
         </td>
         <td>
-          <a
-            href={`/reservations/${reservation_id}/seat`}
-            type="button"
-            className="btn btn-primary"
-          >
-            Seat
-          </a>
+          {status === "seated" ? null : (
+            <a
+              href={`/reservations/${reservation_id}/seat`}
+              type="button"
+              className="btn btn-primary"
+            >
+              Seat
+            </a>
+          )}
         </td>
       </tr>
     </>

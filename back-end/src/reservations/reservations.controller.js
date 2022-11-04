@@ -19,15 +19,6 @@ async function reservationExists(req, res, next) {
   }
 }
 
-// const VALID_PROPERTIES = [
-//   "first_name",
-//   "last_name",
-//   "mobile_number",
-//   "reservation_date",
-//   "reservation_time",
-//   "people",
-// ]
-
 const hasRequiredProperties = hasProperties(
   "first_name",
   "last_name",
@@ -37,18 +28,6 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-// function hasEnoughPeople(req, res, next) {
-//   const peopleInParty = Number(req.body.data.people);
-
-//   if (peopleInParty >= 1) {
-//     return next();
-//   }
-//   next({
-//     status: 400,
-//     message: `Must have at least 1 person in the party to make a reservation.`,
-//   });
-// }
-
 //added status
 const validFields = [
   "first_name",
@@ -57,6 +36,7 @@ const validFields = [
   "reservation_date",
   "reservation_time",
   "people",
+  "status",
 ];
 
 function hasValidFields(req, res, next) {
@@ -145,6 +125,53 @@ function isTime(req, res, next) {
 }
 
 /**
+ * Check checkStatus handler for reservation resources
+ */
+function checkStatus(req, res, next) {
+  const { data } = req.body;
+  //console.log("this is from the check status", data["status"]);
+  if (data["status"] === "seated") {
+    return next({ status: 400, message: `reservation is seated` });
+  }
+  if (data["status"] === "finished") {
+    return next({ status: 400, message: `finished` });
+  }
+  next();
+}
+
+const validStatus = ["booked", "finished", "seated"];
+
+function hasValidStatus(req, res, next) {
+  const { status } = req.body.data;
+  console.log("hasValidStatus:", status);
+  if (!validStatus.includes(status)) {
+    return next({
+      status: 400,
+      message: `unknown`,
+    });
+  }
+  // if (status === "finished") {
+  //   return next({
+  //     status: 400,
+  //     message: `a finished reservation`,
+  //   });
+  // }
+  next();
+}
+
+// function youAlreadyAte(req, res, next) {
+//   const { status } = req.body.data;
+//   console.log("youAlreadyAte:", status);
+//   if (status === "finished") {
+//     return next({
+//       status: 400,
+//       message: `a finished reservation cannot be updated`,
+//     });
+//   }
+//   next();
+// }
+
+/**
  * Create handler for reservation resources
  */
 async function create(req, res) {
@@ -163,7 +190,7 @@ function read(req, res) {
 /**
  * Update handler for reservation resources
  */
-async function update(req, res) {
+async function update(req, res, next) {
   // const { reservation_id } = res.locals.reservation;
   // req.body.data.reservation_id = reservation_id;
   // const data = await reservationsService.update(req.body.data);
@@ -173,10 +200,17 @@ async function update(req, res) {
   const updatedReservation = {
     ...req.body.data,
     reservation_id: res.locals.reservation.reservation_id,
+    status: req.body.data.status,
   };
 
+  if (res.locals.reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: `a finished reservation cannot be updated`,
+    });
+  }
   const data = await reservationsService.update(updatedReservation);
-  res.json({ data });
+  res.status(200).json({ data });
 }
 
 /**
@@ -206,6 +240,7 @@ module.exports = {
     isTime,
     isValidDate,
     isValidNumber,
+    checkStatus,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
@@ -213,10 +248,14 @@ module.exports = {
   update: [
     reservationExists,
     hasValidFields,
-    hasRequiredProperties,
-    isValidNumber,
-    isValidDate,
-    isTime,
+    // hasRequiredProperties,
+    //isValidNumber,
+    // isValidDate,
+    //isTime,
+    //checkStatus,
+
+    hasValidStatus,
+    // youAlreadyAte,
     asyncErrorBoundary(update),
   ],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
