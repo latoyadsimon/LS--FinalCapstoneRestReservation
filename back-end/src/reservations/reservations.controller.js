@@ -6,7 +6,7 @@ const hasProperties = require("../errors/hasProperties");
 //middleware/helper functions
 
 async function reservationExists(req, res, next) {
-  const reservation_id = res.locals.reservation_id;
+  const { reservation_id } = req.params || req.body.data;
   const reservation = await reservationsService.read(reservation_id);
   if (reservation) {
     res.locals.reservation = reservation;
@@ -14,7 +14,7 @@ async function reservationExists(req, res, next) {
   } else {
     next({
       status: 404,
-      message: `Reservation cannot be found. ${reservation_id}`,
+      message: `Reservation not found. ${reservation_id}`,
     });
   }
 }
@@ -58,10 +58,6 @@ function hasValidFields(req, res, next) {
     "reservation_date",
     "reservation_time",
     "people",
-    //"status",
-    //"created_at",
-    //"updated_at",
-    //"reservation_id",
   ]);
 
   const invalidFields = Object.keys(data).filter(
@@ -76,27 +72,12 @@ function hasValidFields(req, res, next) {
   next();
 }
 
-function hasReservationId(req, res, next) {
-  const reservation =
-    req.params.reservation_id || req.body?.data?.reservation_id; // if there is a req.body, check for data, if there is data, check for reservation_id.
-
-  if (reservation) {
-    res.locals.reservation_id = reservation;
-    next();
-  } else {
-    next({
-      status: 400,
-      message: `missing reservation_id`,
-    });
-  }
-}
-
 /**
  * Check "isValidNumber" handler for reservation resources
  */
 function isValidNumber(req, res, next) {
   const { data = {} } = req.body;
-  console.log("this should be the number of people:", data["people"]);
+  // console.log("this should be the number of people:", data["people"]);
   if (data["people"] === 0 || !Number.isInteger(data["people"])) {
     return next({ status: 400, message: `Invalid number of people` });
   }
@@ -111,7 +92,7 @@ function isValidDate(req, res, next) {
   const reservation_date = new Date(data["reservation_date"]);
   const day = reservation_date.getUTCDay(); //check this on mdn-- this is finding the number for the day of the week,
   //according to universal time: 0 for Sunday, 1 for Monday, 2 for Tuesday, and so on.
-  console.log("this is the reservation date:", reservation_date);
+  // console.log("this is the reservation date:", reservation_date);
 
   if (isNaN(Date.parse(data["reservation_date"]))) {
     return next({ status: 400, message: `Invalid reservation_date` });
@@ -130,18 +111,12 @@ function isValidDate(req, res, next) {
   next();
 }
 
-function removeDate(date) {
-  return date.getHours() + ":" + date.getMinutes();
-}
-
 /**
  * Check "isTime" handler for reservation resources
  */
 //this is using regexp; regular expressions, patterns
 function isTime(req, res, next) {
   const { data = {} } = req.body;
-  const curTime = removeDate(new Date());
-  // TODO: Change this...
   //HH:MM 24-hour with leading 0 || don't know what this one is yet***
   if (
     /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(data["reservation_time"]) ||
@@ -155,12 +130,7 @@ function isTime(req, res, next) {
         message: "restaurant is not open until 10:30AM",
       });
     }
-    if (data["reservation_time"] < curTime) {
-      return next({
-        status: 400,
-        message: "cannot schedule a reservation before now",
-      });
-    }
+
     if (data["reservation_time"] > "21:30") {
       return next({
         status: 400,
@@ -183,8 +153,8 @@ async function create(req, res) {
 /**
  * Read handler for reservation resources
  */
-
-async function read(req, res) {
+//**change made here */
+function read(req, res) {
   res.status(200).json({ data: res.locals.reservation });
 }
 
@@ -218,24 +188,6 @@ async function destroy(req, res) {
 }
 
 /**
- * List handler for reservation resources
- */
-//showing all the lists for just the day, or just listing all reservations no matter what day
-// async function list(req, res, next) {
-//   const { reservation_date } = req.query;
-
-//   if (reservation_date === today) {
-//     res.json({
-//       data: await await reservationsService.reservationIsToday(
-//         reservation_date
-//       ),
-//     });
-//   }
-
-//   res.status(200).json({ data: await reservationsService.list() });
-// }
-
-/**
  * List handler (basic) for reservation resources
  */
 async function list(req, res) {
@@ -250,22 +202,19 @@ module.exports = {
     hasRequiredProperties,
     hasValidFields,
     isTime,
-    //hasEnoughPeople,
     isValidDate,
     isValidNumber,
     asyncErrorBoundary(create),
   ],
-  read: [hasReservationId, reservationExists, asyncErrorBoundary(read)],
-  reservationExists: [hasReservationId, reservationExists],
+  read: [asyncErrorBoundary(reservationExists), read],
+  reservationExists: [reservationExists],
   update: [
     reservationExists,
-    hasReservationId,
     hasValidFields,
     hasRequiredProperties,
     isValidNumber,
     isValidDate,
     isTime,
-    // hasEnoughPeople,
     asyncErrorBoundary(update),
   ],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],

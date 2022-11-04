@@ -79,27 +79,18 @@ export async function createReservation(reservation, signal) {
     body: JSON.stringify({ data: reservation }),
     signal,
   };
-  // console.log({
-  //   "createReservation api.js options: ": options,
-  //   "createReservation api.js reservation: ": reservation,
-  // });
   return await fetchJson(url, options, reservation);
 }
 
 //module 39 we love movies frontend api.js
 export async function readReservation(reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
-  return await fetchJson(url, { headers, signal }, [])
+  return await fetchJson(url, { headers, signal })
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
 
-export async function deleteReservation(reservationId) {
-  const url = `${API_BASE_URL}/reservations/${reservationId}`;
-  return await fetchJson(url, { method: "DELETE", headers }, {});
-}
-
-export async function finishTable(table_id, reservation_id) {
+export async function finishTable(table_id) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
@@ -131,4 +122,36 @@ export async function updateReservation(reservationId, data) {
     body: JSON.stringify({ data }),
   };
   return await fetchJson(url, options, {});
+}
+
+//Tables
+
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+//notes from 37.5 StarterCode, added 10/27/22
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+
+  return await fetchJson(url, options, table);
+}
+
+export async function seatTable(reservation_id, table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { reservation_id } }),
+    signal,
+  };
+  return await fetchJson(url, options);
 }
