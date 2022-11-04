@@ -16,6 +16,7 @@ function Tables({ table, loadDashboard }) {
     }
     return null;
   };
+
   return (
     <tr key={table_id}>
       <th scope="row">{table_id}</th>
