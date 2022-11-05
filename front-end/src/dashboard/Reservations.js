@@ -1,4 +1,5 @@
 import React from "react";
+import { cancelReservation } from "../utils/api";
 
 function Reservations({ reservation, loadDashboard }) {
   const {
@@ -11,6 +12,20 @@ function Reservations({ reservation, loadDashboard }) {
     people,
     status,
   } = reservation;
+
+
+ const handleCancel = () => {
+    const confirmBox = window.confirm(
+      "Do you want to cancel this reservation? This cannot be undone."
+    );
+    if (confirmBox === true) {
+      cancelReservation(reservation_id)
+        .then(loadDashboard)
+        .catch((error) => console.log("error", error));
+    }
+    return null;
+  };
+
   return (
     <>
       <tr key={reservation_id}>
@@ -23,18 +38,31 @@ function Reservations({ reservation, loadDashboard }) {
         <td className="rowBorder">{reservation_time}</td>
         <td className="rowBorder">{people}</td>
         <td data-reservation-id-status={reservation_id} className="rowBorder">
-          {status}
+        Currently:  {status}
         </td>
         <td>
-          {status === "seated" ? null : (
+          {status === "booked" ?  
+          <div>
             <a
               href={`/reservations/${reservation_id}/seat`}
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary mx-2"
             >
               Seat
             </a>
-          )}
+            <a
+              href={`/reservations/${reservation_id}/edit`}
+              type="button"
+              className="btn btn-secondary mx-2"
+            >
+              Edit
+            </a>
+            <button type="button" className="btn btn-warning mx-2" data-reservation-id-cancel={reservation.reservation_id}
+            onClick={handleCancel}
+            >Cancel</button>
+          </div>: null  
+            
+          }
         </td>
       </tr>
     </>

@@ -99,8 +99,8 @@ export async function finishTable(table_id) {
   return await fetchJson(url, options, {});
 }
 
-export async function cancelReservation(reservationId, signal) {
-  const url = `${API_BASE_URL}/reservations/${reservationId}/status`;
+export async function cancelReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
   const options = {
     method: "PUT",
     headers,
