@@ -36,6 +36,9 @@ const validFields = [
   "reservation_time",
   "people",
   "status",
+  "reservation_id",
+  "created_at",
+  "updated_at"
 ];
 
 function hasValidFields(req, res, next) {
@@ -138,7 +141,7 @@ function checkStatus(req, res, next) {
   next();
 }
 
-const validStatus = ["booked", "finished", "seated"];
+const validStatus = ["booked", "finished", "seated", "cancelled"];
 
 function hasValidStatus(req, res, next) {
   const { status } = req.body.data;
@@ -190,15 +193,10 @@ function read(req, res) {
  * Update handler for reservation resources
  */
 async function update(req, res, next) {
-  // const { reservation_id } = res.locals.reservation;
-  // req.body.data.reservation_id = reservation_id;
-  // const data = await reservationsService.update(req.body.data);
-  // res.json({ data });
-  //a different way to write  const updatedReservation
-
+  
   const updatedReservation = {
     ...req.body.data,
-    reservation_id: res.locals.reservation.reservation_id,
+    reservation_id: req.params.reservation_id,
     status: req.body.data.status,
   };
 
@@ -207,10 +205,46 @@ async function update(req, res, next) {
       status: 400,
       message: `a finished reservation cannot be updated`,
     });
+
   }
+  console.log("this is the update function:", updatedReservation)
   const data = await reservationsService.update(updatedReservation);
   res.status(200).json({ data });
 }
+
+
+
+async function updateStatus(req, res, next) {
+  
+  const updatedStatus = {
+    ...req.body.data,
+    reservation_id: req.params.reservation_id,
+    status: req.body.data.status,
+  };
+
+  if (res.locals.reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: `a finished reservation cannot be updated`,
+    });
+
+  }
+  console.log("this is the update function:", updatedStatus)
+  const data = await reservationsService.update(updatedStatus);
+  res.status(200).json({ data });
+}
+
+// async function cancelReservationStatus(req, res, next) {
+//   const {reservation_id} = req.params;
+//   const data = await reservationsService.cancelReservationStatus(reservation_id);
+//   res.status(200).json({data})
+// }
+
+
+
+
+
+
 
 //search controller
 
@@ -249,10 +283,26 @@ module.exports = {
   reservationExists: [reservationExists],
   update: [
     reservationExists,
+    hasRequiredProperties,
     hasValidFields,
+    isTime,
+    isValidDate,
+    isValidNumber,
     hasValidStatus,
+     
+   // checkStatus,
     asyncErrorBoundary(update),
   ],
+  // cancelReservationStatus: [
+  //    reservationExists,
+  //   hasValidFields,
+  //   hasValidStatus,
+  //   asyncErrorBoundary(cancelReservationStatus)],
+      updateStatus: [
+     reservationExists,
+    hasValidFields,
+    hasValidStatus,
+    asyncErrorBoundary(updateStatus)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   list: asyncErrorBoundary(list),
 };
