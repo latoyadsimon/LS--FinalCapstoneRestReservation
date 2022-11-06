@@ -99,13 +99,14 @@ export async function finishTable(table_id) {
   return await fetchJson(url, options, {});
 }
 
-export async function cancelReservation(reservation_id, signal) {
+export async function cancelReservation(reservation,reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
   const options = {
     method: "PUT",
     headers,
     body: JSON.stringify({
       data: {
+        //...reservation,
         status: "cancelled",
       },
     }),
@@ -114,15 +115,16 @@ export async function cancelReservation(reservation_id, signal) {
   return await fetchJson(url, options, {});
 }
 
-export async function updateReservation(reservationId, data) {
+export async function updateReservation(reservationId, reservation) {
   const url = `${API_BASE_URL}/reservations/${reservationId}`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data }),
+    body: JSON.stringify({ data: reservation }),
   };
   return await fetchJson(url, options, {});
 }
+
 
 //Tables
 

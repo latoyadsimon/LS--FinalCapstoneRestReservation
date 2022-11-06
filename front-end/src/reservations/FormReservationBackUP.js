@@ -1,21 +1,22 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function FormReservation({reservation, setReservation, submitHandler}) {
+function FormReservation() {
   const history = useHistory();
 
-  // const initialState = {
-  //   first_name: "",
-  //   last_name: "",
-  //   mobile_number: "",
-  //   reservation_date: "",
-  //   reservation_time: "",
-  //   people: 1,
-  // };
+  const initialState = {
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: 1,
+  };
 
-  // const [reservation, setReservation] = useState(initialState);
+  const [reservation, setReservation] = useState(initialState);
 
   function changeHandler({ target: { name, value } }) {
     setReservation((prevState) => ({
@@ -32,19 +33,19 @@ function FormReservation({reservation, setReservation, submitHandler}) {
     }));
   }
 
-   const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
-  //define in create and edit
-  // function submitHandler(event) {
-  //   event.preventDefault();
-  //   createReservation(reservation)
-  //     .then((createdReservation) => {
-  //       const res_date =
-  //         createdReservation.reservation_date.match(/\d{4}-\d{2}-\d{2}/)[0];
-  //       history.push(`/dashboard?date=` + res_date);
-  //     })
-  //     .catch(setError);
-  // }
+  function submitHandler(event) {
+    event.preventDefault();
+
+    createReservation(reservation)
+      .then((createdReservation) => {
+        const res_date =
+          createdReservation.reservation_date.match(/\d{4}-\d{2}-\d{2}/)[0];
+        history.push(`/dashboard?date=` + res_date);
+      })
+      .catch(setError);
+  }
 
   return (
     <form onSubmit={submitHandler}>

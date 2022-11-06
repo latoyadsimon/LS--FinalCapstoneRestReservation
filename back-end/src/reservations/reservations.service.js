@@ -23,10 +23,19 @@ function create(newReservation) {
 function update(updatedReservation) {
   return knex("reservations")
     .where({ reservation_id: updatedReservation.reservation_id })
-    .whereNot({ status: "finished" })
+   .whereNot({ status: "finished" })
     .update(updatedReservation, "*")
     .then((updatedRecord) => updatedRecord[0]);
 }
+
+function cancelReservationStatus(reservation_id) {
+  return knex("reservations")
+  .where({reservation_id: reservation_id })
+  .whereNot({ status: "finished" })
+  .update({status: "cancelled"})
+  .returning("*")
+}
+
 
 //given in project readme
 // remove any non-numeric characters from the submitted mobile number and also use the PostgreSQL translate function.
@@ -48,6 +57,7 @@ module.exports = {
   read,
   create,
   update,
+  cancelReservationStatus,
   search,
   delete: destroy,
 };

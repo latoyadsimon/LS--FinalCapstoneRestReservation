@@ -1,7 +1,9 @@
 import React from "react";
+import { useHistory } from "react-router";
 import { cancelReservation } from "../utils/api";
 
 function Reservations({ reservation, loadDashboard }) {
+  const history = useHistory();
   const {
     reservation_id,
     first_name,
@@ -19,8 +21,9 @@ function Reservations({ reservation, loadDashboard }) {
       "Do you want to cancel this reservation? This cannot be undone."
     );
     if (confirmBox === true) {
-      cancelReservation(reservation_id)
-        .then(loadDashboard)
+      cancelReservation( reservation, reservation_id)
+        .then(() => history.go())
+      //.then(() => loadDashboard())
         .catch((error) => console.log("error", error));
     }
     return null;

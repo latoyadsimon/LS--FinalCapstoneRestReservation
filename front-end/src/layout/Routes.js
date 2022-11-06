@@ -12,6 +12,7 @@ import Search from "../dashboard/Search";
 import CreateTable from "../tables/CreateTable";
 import SeatTable from "../tables/SeatTable";
 import ReservationStatus from "../reservations/ReservationStatus";
+import EditReservation from "../reservations/EditReservation";
 
 /**
  * Defines all the routes for the application.
@@ -40,6 +41,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/:reservation_id/status">
         <ReservationStatus />
+      </Route>
+       <Route path="/reservations/:reservation_id/edit">
+        <EditReservation />
       </Route>
 
       <Route exact={true} path="/tables">
