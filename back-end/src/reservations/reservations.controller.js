@@ -101,7 +101,7 @@ function isValidDate(req, res, next) {
 //this is using regexp; regular expressions, patterns
 function isTime(req, res, next) {
   const { data = {} } = req.body;
-  //HH:MM 24-hour with leading 0 || don't know what this one is yet***
+  //HH:MM 24-hour with leading 0 || don't know what this other pattern is yet***
   if (
     /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(data["reservation_time"]) ||
     /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/.test(
@@ -131,7 +131,7 @@ function isTime(req, res, next) {
  */
 function checkStatus(req, res, next) {
   const { data } = req.body;
-  //console.log("this is from the check status", data["status"]);
+  
   if (data["status"] === "seated") {
     return next({ status: 400, message: `reservation is seated` });
   }
@@ -152,26 +152,10 @@ function hasValidStatus(req, res, next) {
       message: `unknown`,
     });
   }
-  // if (status === "finished") {
-  //   return next({
-  //     status: 400,
-  //     message: `a finished reservation`,
-  //   });
-  // }
+  
   next();
 }
 
-// function youAlreadyAte(req, res, next) {
-//   const { status } = req.body.data;
-//   console.log("youAlreadyAte:", status);
-//   if (status === "finished") {
-//     return next({
-//       status: 400,
-//       message: `a finished reservation cannot be updated`,
-//     });
-//   }
-//   next();
-// }
 
 /**
  * Create handler for reservation resources
@@ -184,7 +168,7 @@ async function create(req, res) {
 /**
  * Read handler for reservation resources
  */
-//**change made here */
+
 function read(req, res) {
   res.status(200).json({ data: res.locals.reservation });
 }
@@ -234,11 +218,6 @@ async function updateStatus(req, res, next) {
   res.status(200).json({ data });
 }
 
-// async function cancelReservationStatus(req, res, next) {
-//   const {reservation_id} = req.params;
-//   const data = await reservationsService.cancelReservationStatus(reservation_id);
-//   res.status(200).json({data})
-// }
 
 
 
@@ -246,7 +225,8 @@ async function updateStatus(req, res, next) {
 
 
 
-//search controller
+
+
 
 /**
  * Delete handler for reservation resources

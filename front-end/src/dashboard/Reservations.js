@@ -23,7 +23,7 @@ function Reservations({ reservation, loadDashboard }) {
     if (confirmBox === true) {
       cancelReservation( reservation, reservation_id)
         .then(() => history.go())
-      //.then(() => loadDashboard())
+     
         .catch((error) => console.log("error", error));
     }
     return null;

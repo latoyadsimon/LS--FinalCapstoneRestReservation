@@ -1,12 +1,12 @@
-//const { today } = require("../../../front-end/src/utils/date-time");
+
 
 const knex = require("../db/connection");
 
 function list(date) {
-  // return knex("reservations").select("*");
+  
   return knex("reservations")
     .where("reservation_date", date)
-    .whereNotIn("status", ["finished", "cancelled"]) ////look up whereNotIn for knex
+    .whereNotIn("status", ["finished", "cancelled"]) 
     .orderBy("reservation_time");
 }
 
@@ -37,7 +37,7 @@ function cancelReservationStatus(reservation_id) {
 }
 
 
-//given in project readme
+//function given in project readme
 // remove any non-numeric characters from the submitted mobile number and also use the PostgreSQL translate function.
 function search(mobile_number) {
   return knex("reservations")

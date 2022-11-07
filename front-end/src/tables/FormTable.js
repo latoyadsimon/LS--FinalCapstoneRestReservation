@@ -46,7 +46,6 @@ function FormTable() {
 
   return (
     <main>
-      {/* <h1>Create Table</h1> */}
       <ErrorAlert error={error} />
       <p>This is my pretty table for you to sit at</p>
       <form onSubmit={submitHandler}>

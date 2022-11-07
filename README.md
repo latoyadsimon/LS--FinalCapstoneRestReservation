@@ -1,3 +1,6 @@
+# This starter code is from our Final Capstone project of the Thinkful Bootcamp Engineering Immersion program.
+This project was designed to simulate creating an app following RESTful API standards. 
+
 # Capstone: Restaurant Reservation System
 
 > You have been hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.

@@ -5,7 +5,7 @@ const reservationsService = require("../reservations/reservations.service");
 
 //middleware/ helper functions
 
-//come back to check the const table_id = res.locals.table_id
+
 async function tablesExists(req, res, next) {
   // const table_id = res.locals.table_id;
   const table_id = req.params.table_id;
@@ -57,8 +57,7 @@ function hasValidFields(req, res, next) {
 
 function isValidNumber(req, res, next) {
   const { data = {} } = req.body;
-  // console.log("this should be the capacity:", data["capacity"]);
-
+  
   if (data["capacity"] === 0 || !Number.isInteger(data["capacity"])) {
     return next({ status: 400, message: `Invalid number for capacity` });
   }
@@ -122,15 +121,6 @@ async function read(req, res) {
   res.status(200).json({ data: res.locals.table });
 }
 
-// async function updateSeated(req, res) {
-//   const updatedSeat = {
-//     ...req.body.data,
-//     status: "seated",
-//   };
-
-//   const data = await tablesService.updateSeated(updatedSeat);
-//   res.json({ data });
-// }
 
 //make a middleware function that checks the table for a reservation id.
 function finishTableOccupied(req, res, next) {
@@ -147,13 +137,10 @@ function finishTableOccupied(req, res, next) {
 
 async function finishTable(req, res, next) {
   const { table_id } = req.params;
-  // const updatedReservation = { ...req.body.data };
   const { reservation_id } = res.locals.table;
-  console.log("this is from the finishTable in controller", table_id);
-  // console.log("this is from the finishTable in controller", reservation_id);
 
   const data = await tablesService.finishTable(table_id, reservation_id);
-  console.log("this is from the finishTable in controller", data);
+  
   res.status(200).json({ data });
 }
 
@@ -171,11 +158,6 @@ function isTableAlreadySeated(req, res, next) {
 async function seatTable(req, res) {
   const { table_id } = req.params;
   const { reservation_id } = req.body.data;
-
-  // const updatedSeat = {
-  //   ...req.body.data,
-  //   status: "seated",
-  // };
 
   const data = await tablesService.seatTable(reservation_id, table_id);
   res.status(200).json({ data });

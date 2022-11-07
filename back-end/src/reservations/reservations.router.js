@@ -34,4 +34,3 @@ router
   .all(methodNotAllowed);
 
 module.exports = router;
-//difference between update router, put changes all of the data, patch changes some of the data
