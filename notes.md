@@ -130,7 +130,7 @@ Progressive enhancement
 A mobile-first approach that involves designing for the smallest screen first, then progressively adding features and rearranging the layout to take advantage of larger screen sizes
 
 ----------
-deploying on heroku
+deploying on heroku ---- this is going away soon
 
 https://rest-reservation-backendtoya.herokuapp.com/ | https://git.heroku.com/rest-reservation-backendtoya.git
 
@@ -138,12 +138,18 @@ https://rest-reservation-clienttoya.herokuapp.com/ | https://git.heroku.com/rest
 
 
 ----------
-3.134.238.10
-3.129.111.220
-52.15.118.168
 
 
 -------
-NODE_ENV=production npm run knex -- migrate:latest
+render.com
+Redirect and Rewrite Rules
+Add Redirect or Rewrite Rules to modify requests to your site without writing code. You can use URL parameters to capture path segments, and wildcards to redirect everything under a given path.
 
+source: /*
+destination: /index.html
+action: redirect
+
+render backend and render client
+--this will make the tables on the production database
 NODE_ENV=production npx knex migrate:latest
+NODE_ENV=production npx knex seed:run
