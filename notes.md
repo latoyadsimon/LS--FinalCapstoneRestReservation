@@ -129,3 +129,21 @@ Styling - 11/06/22
 Progressive enhancement
 A mobile-first approach that involves designing for the smallest screen first, then progressively adding features and rearranging the layout to take advantage of larger screen sizes
 
+----------
+deploying on heroku
+
+https://rest-reservation-backendtoya.herokuapp.com/ | https://git.heroku.com/rest-reservation-backendtoya.git
+
+https://rest-reservation-clienttoya.herokuapp.com/ | https://git.heroku.com/rest-reservation-clienttoya.git
+
+
+----------
+3.134.238.10
+3.129.111.220
+52.15.118.168
+
+
+-------
+NODE_ENV=production npm run knex -- migrate:latest
+
+NODE_ENV=production npx knex migrate:latest
