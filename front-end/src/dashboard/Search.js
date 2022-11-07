@@ -54,7 +54,7 @@ function Search() {
         </button>
       </form>
       <table className="table">
-        <thead>
+        <thead className="thead-dark">
           <tr>
             <th scope="col">#</th>
             <th scope="col">NAME</th>

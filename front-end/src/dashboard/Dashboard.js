@@ -77,7 +77,7 @@ function Dashboard({ date }) {
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
       <table className="table">
-        <thead>
+        <thead className="thead-dark">
           <tr>
             <th scope="col">#</th>
             <th scope="col">NAME</th>
@@ -86,6 +86,7 @@ function Dashboard({ date }) {
             <th scope="col">TIME</th>
             <th scope="col">PEOPLE</th>
             <th scope="col">STATUS</th>
+            <th scope="col">CHANGE THE STATUS</th>
           </tr>
         </thead>
         <tbody>{reservationList}</tbody>
@@ -97,7 +98,7 @@ function Dashboard({ date }) {
 
       <main>
         <table className="table">
-          <thead>
+          <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Table Name</th>
@@ -111,7 +112,7 @@ function Dashboard({ date }) {
       </main>
 
       <div className="row">
-        <div className="btn-group col" role="group" aria-label="Basic example">
+        <div className="btn-group col d-md-flex mb-3" role="group" aria-label="Basic example">
           <button
             type="button"
             className="btn btn-info"

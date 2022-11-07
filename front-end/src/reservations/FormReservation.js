@@ -76,6 +76,8 @@ function FormReservation({reservation, setReservation, submitHandler}) {
           <input
             name="mobile_number"
             type="tel"
+      //       pattern="\d{3}[\-]\d{3}[\-]\d{4}"
+      // placeholder="xxx-xxx-xxxx"
             value={reservation.mobile_number}
             onChange={changeHandler}
           />
@@ -87,6 +89,8 @@ function FormReservation({reservation, setReservation, submitHandler}) {
           <input
             name="reservation_date"
             type="date"
+            // placeholder="YYYY-MM-DD" 
+            // pattern="\d{4}-\d{2}-\d{2}"
             value={reservation.reservation_date}
             onChange={changeHandler}
           />
@@ -98,6 +102,7 @@ function FormReservation({reservation, setReservation, submitHandler}) {
           <input
             name="reservation_time"
             type="time"
+            placeholder="HH:MM" pattern="[0-9]{2}:[0-9]{2}"
             value={reservation.reservation_time}
             onChange={changeHandler}
           />
