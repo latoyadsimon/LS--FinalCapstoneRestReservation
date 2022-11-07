@@ -273,11 +273,7 @@ module.exports = {
    // checkStatus,
     asyncErrorBoundary(update),
   ],
-  // cancelReservationStatus: [
-  //    reservationExists,
-  //   hasValidFields,
-  //   hasValidStatus,
-  //   asyncErrorBoundary(cancelReservationStatus)],
+  
       updateStatus: [
      reservationExists,
     hasValidFields,

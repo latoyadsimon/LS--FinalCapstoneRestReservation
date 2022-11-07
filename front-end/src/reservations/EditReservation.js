@@ -27,7 +27,7 @@ const {reservation_id} = useParams();
   const [reservationsError, setReservationsError] = useState(null);
   const [error, setError] = useState(null);
 
-//const abortController = new AbortController();
+
 
   useEffect(loadDashboard, [reservation_id]);
 
