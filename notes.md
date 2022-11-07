@@ -153,3 +153,9 @@ render backend and render client
 --this will make the tables on the production database
 NODE_ENV=production npx knex migrate:latest
 NODE_ENV=production npx knex seed:run
+
+
+---------
+frontend is on vercel:front-end-five-rho.vercel.app
+backend is on render: https://restaurant-reservation-server-uyv1.onrender.com
+github repo urls: https://github.com/latoyadsimon/LS--FinalCapstoneRestReservation.git
